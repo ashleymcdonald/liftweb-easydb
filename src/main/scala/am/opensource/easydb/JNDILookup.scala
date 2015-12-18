@@ -7,6 +7,7 @@ import net.liftweb.util.Helpers._
 
 import scala.collection.mutable.ListBuffer
 
+//TEST
 
 object JNDILookup extends Loggable {
 	private[this] val paths: List[String] = List("java:comp/env","java:comp/env/jdbc","java:comp/env/ejb","java:comp/UserTransaction","java:comp/env/mail","java:comp/env/url","java:comp/env/jms","java:comp/ORB")
