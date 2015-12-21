@@ -6,24 +6,27 @@ import java.sql.Connection
 import com.zaxxer.hikari._
 import net.liftweb.common.{Box, Empty, Full, Loggable}
 import net.liftweb.mapper._
-import net.liftweb.util.Helpers
+import net.liftweb.util.{Props, Helpers}
 
 object PoolProvider extends ConnectionManager with Closeable with Loggable {
+
+
+
 	private[this] lazy val pool = {
 		val config = new HikariConfig()
-		config.setDataSourceClassName(JNDILookup[String]("jdbc/db/classname"))
-		config.addDataSourceProperty("host",JNDILookup[String]("jdbc/db/host"))
-		config.addDataSourceProperty("port",JNDILookup[Integer]("jdbc/db/port"))
-		config.addDataSourceProperty("database",JNDILookup[String]("jdbc/db/database"))
-		config.addDataSourceProperty("user", JNDILookup[String]("jdbc/db/user"))
-		config.addDataSourceProperty("password", JNDILookup[String]("jdbc/db/password"))
+		config.setDataSourceClassName(dbConfig.DataSourceClassName())
+		config.addDataSourceProperty("host",dbConfig.DataSourceHost())
+		config.addDataSourceProperty("port",dbConfig.DataSourcePort())
+		config.addDataSourceProperty("database",dbConfig.DataSourceDatabase())
+		config.addDataSourceProperty("user", dbConfig.DataSourceUser())
+		config.addDataSourceProperty("password", dbConfig.DataSourcePassword())
 
-		config.setMinimumIdle(JNDILookup[Integer]("jdbc/pool/minidle"))
-		config.setMaximumPoolSize(JNDILookup[Integer]("jdbc/pool/maxsize"))
-		config.setConnectionTimeout(JNDILookup[Long]("jdbc/pool/conntimeout"))
-		config.setIdleTimeout(JNDILookup[Long]("jdbc/pool/idletimeout"))
-		config.setLeakDetectionThreshold(JNDILookup[Long]("jdbc/pool/leakthreshold"))
-		config.setMaxLifetime(JNDILookup[Long]("jdbc/pool/maxlifetime"))
+		config.setMinimumIdle(dbConfig.PoolMinimumIdle())
+		config.setMaximumPoolSize(dbConfig.PoolMaximumPoolSize())
+		config.setConnectionTimeout(dbConfig.PoolConnectionTimeout())
+		config.setIdleTimeout(dbConfig.PoolIdleTimeout())
+		config.setLeakDetectionThreshold(dbConfig.PoolLeakDetectionThreshold())
+		config.setMaxLifetime(dbConfig.PoolMaxLifetime())
 
 		new HikariDataSource(config)
 	}

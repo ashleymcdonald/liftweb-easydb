@@ -39,7 +39,7 @@ object JNDILookup extends Loggable {
 			Empty
 		}
 	}
-	def apply[T](name: String): T = {
-		jndiLookup[T](name).openOrThrowException("Missing key "+name+" from JNDI lookup? BARF")
+	def apply[T](name: String): Box[T] = {
+		jndiLookup[T](name) //.openOrThrowException("Missing key "+name+" from JNDI lookup? BARF")
 	}
 }
