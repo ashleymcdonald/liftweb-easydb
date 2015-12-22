@@ -10,8 +10,6 @@ import net.liftweb.util.{Props, Helpers}
 
 object PoolProvider extends ConnectionManager with Closeable with Loggable {
 
-
-
 	private[this] lazy val pool = {
 		val config = new HikariConfig()
 		config.setDataSourceClassName(dbConfig.DataSourceClassName())
@@ -47,7 +45,7 @@ object PoolProvider extends ConnectionManager with Closeable with Loggable {
 		newConnection(name).map(c => {
 			val uniqueId = if (logger.isDebugEnabled) Helpers.nextNum.toString else ""
 			logger.debug("Connection ID " + uniqueId + " for JNDI connection " + name.jndiName + " opened")
-			new SuperConnection(c, () => {logger.debug("Connection ID " + uniqueId + " for JNDI connection " + name.jndiName + " closed"); c.close})
+			new SuperConnection(c, () => {logger.debug("Connection ID " + uniqueId + " for JNDI connection " + name.jndiName + " closed"); c.close()})
 		})
 	}
 
