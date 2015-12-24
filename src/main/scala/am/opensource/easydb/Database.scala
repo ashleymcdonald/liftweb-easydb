@@ -20,17 +20,12 @@ object Database extends Loggable {
 
 	def shutdown() = PoolProvider.shutdown()
 
-	def schemifyLoop(stables: BaseMetaMapper*):Boolean = Schemifier.schemify(
-		true, // Write schema to db
-		msg => schemeLogger(msg), // Log function
-		stables :_*
-	) match {
-		case x if x.nonEmpty => schemifyLoop(stables :_*)
-		case x if x.isEmpty => true
-	}
-
 	def schemify(stables: BaseMetaMapper*) = try {
-		schemifyLoop(stables :_*)
+		Schemifier.schemify(
+			true, // Write schema to db
+			msg => schemeLogger(msg), // Log function
+			stables :_*
+		)
 	} catch {
 		case e: Exception =>
 			if (Props.mode == Props.RunModes.Development) {
